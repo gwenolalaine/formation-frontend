@@ -6,6 +6,18 @@ const rl = readline.createInterface({
     output: process.stdout
   });
 
+function afficherSpeakers(speakers) {
+    var str = ""
+    if (speakers != undefined) {
+        speakers.forEach(function (nom) {
+            str = str + service.listerTousLesPresentateurs().filter(speaker => speaker.id == nom ).map(speaker => speaker.lastname + " " + speaker.firstname+" ")
+        });
+    } else {
+        str = "Aucun"
+    }
+    return str
+}
+
 var menu={
     "1":{
         libelle:'1. Liste de tous les présentateurs',
@@ -30,7 +42,7 @@ var menu={
         execute:function(){
             rl.question('L\'id de la session ?', (id) => {
             if(id !=null){
-                console.log(service.trouverUneSession(id).map(session=>session.title + " " + session.hour + " " + session.confRoom + " " + session.type));
+                console.log(service.trouverUneSession(id).map(session=>session.title + " présenté par " + afficherSpeakers(session.speakers)));
                 callMenu();
             }
         })
@@ -43,21 +55,26 @@ var menu={
         }
     }
 }
+
+
+
+console.log('*** Application Conférence ***')
+for(option in menu){
+    console.log(menu[option].libelle);
+}
   
 function callMenu(){
-    console.log('*** Application Conférence ***')
-    for(option in menu){
-        console.log(menu[option].libelle);
-    }
-  
     rl.question('Votre réponse', (answer) => {
-      // TODO: Log the answer in a database
-      menu[answer].execute();
-      if(answer != "5"){
-          callMenu();
-      }else{
-          rl.close();
-      }
+        if(menu[answer] !=null){
+            menu[answer].execute();
+            if(answer != "5"){
+                callMenu();
+            }
+        }else{
+            console.log("Cette option n'existe pas");
+            callMenu();
+        }
+      
    })
 }
 callMenu()

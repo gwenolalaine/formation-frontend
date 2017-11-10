@@ -9,7 +9,7 @@ module.exports = {
     },
 
     trouverUneSession :function (idSession){
-        return donnees.sessions.filter(e=>e.id==idSession);
+        return donnees.sessions.filter(session=>session.id==idSession);
     },
 
     listerTopPresentateurs: function (){
